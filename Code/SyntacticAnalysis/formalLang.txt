@@ -1,0 +1,6 @@
+S -> F;
+F -> If E then T else F | if E then F | a := E
+T -> if E then T else T | a := E
+E -> E or D | E xor D | D
+D -> D and C | D
+C -> a | ( E )
