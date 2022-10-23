@@ -17,6 +17,15 @@ public:
     explicit LexicalWindow(QWidget *parent = nullptr);
     ~LexicalWindow();
     void recieveData(QString codeText);
+    QStringList getTableValues(QTableWidget *tw);
+    QList<QPair<int, int>> getNumTokens();
+    QStringList getTerminals();
+    QStringList getSeparators();
+    QStringList getIdentifiers();
+    QStringList getConstants();
+
+
+
 
 private slots:
     void on_startLexicalAnalyze_clicked();

@@ -2,7 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "lexicalwindow.h"
+#include "./LexicalAnalysis/lexicalwindow.h"
+#include "./SyntacticAnalysis/syntacticwindow.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,8 +22,18 @@ private slots:
     void on_action_triggered();
     void sendCodeText();
 
+    void on_action_2_triggered();
+
+    void on_action_3_triggered();
+
 private:
     Ui::MainWindow *ui;
     LexicalWindow *lexicalwindow;
+    SyntacticWindow *syntacticwindow;
+
+    QTime *time;
+
+    void buildOutput(QString text);
+
 };
 #endif // MAINWINDOW_H

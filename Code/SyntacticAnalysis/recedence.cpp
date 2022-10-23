@@ -1,6 +1,5 @@
 #include "recedence.h"
 
-#include <QDebug>
 
 Recedence::Recedence()
 {
@@ -38,6 +37,11 @@ QStringList Recedence::getTerminals()
 QList<QList<QString> > Recedence::getRecedenceMat()
 {
     return _recedenceMat;
+}
+
+QString Recedence::getFormalLang()
+{
+    return _formalLang;
 }
 
 int Recedence::find(QList<RecedenceItem> list, QString termName)
@@ -90,7 +94,6 @@ void Recedence::generateNonTerm(QList<QStringList> tokens)
         QStringList left = copy[row].getLeft();
         for(int leftIndex = 0; leftIndex < left.length(); leftIndex++)
         {
-            qDebug() << find(_nonTerm, left[leftIndex]);
             if(find(_nonTerm, left[leftIndex]) >= 0 && find(_nonTerm, left[leftIndex]) != row)
             {
                 copy[row].getLeft().append(copy[find(copy, left[leftIndex])].getLeft());
@@ -281,9 +284,6 @@ void Recedence::generateRecedence()
                         {
                             for(int terminal = 0; terminal < _term[nonTermPos].getRight().length(); terminal++)
                             {
-                                qDebug() << "1:" << _term[nonTermPos].getRight()[terminal];
-                                qDebug() << "2:" << findTerminalIndex(_term[nonTermPos].getRight()[terminal]);
-                                qDebug() << "3:" << _recedenceMat[findTerminalIndex(_term[nonTermPos].getRight()[terminal])][terminalRow];
                                 if(_recedenceMat[findTerminalIndex(_term[nonTermPos].getRight()[terminal])][terminalRow] != ">.")
                                     _recedenceMat[findTerminalIndex(_term[nonTermPos].getRight()[terminal])][terminalRow] += ">.";
                             }

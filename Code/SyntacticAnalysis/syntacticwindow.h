@@ -4,6 +4,7 @@
 #include <QWidget>
 
 #include "recedence.h"
+#include "syntanal.h"
 
 namespace Ui { class SyntacticWindow; }
 
@@ -15,6 +16,9 @@ class SyntacticWindow : public QWidget
 public:
     SyntacticWindow(QWidget *parent = nullptr);
     ~SyntacticWindow();
+    void startSyntacticAnalysis(QString code,
+                                QList<QPair<int, int>> numTokens,
+                                QList<QStringList> tokens);
 
 private slots:
     void on_pushButton_clicked();
@@ -22,6 +26,7 @@ private slots:
 private:
     Ui::SyntacticWindow *ui;
     Recedence *recedenceMat;
+    SyntAnal *syntAnal;
 
 };
 #endif // SYNTACTICWINDOW_H

@@ -14,6 +14,7 @@ public:
     QList<RecedenceItem> getTerm();
     QStringList getTerminals();
     QList<QList<QString>> getRecedenceMat();
+    QString getFormalLang();
     int find(QList<RecedenceItem> list, QString termName);
 
 
@@ -33,6 +34,7 @@ private:
     QList<QStringList> parseLanguage();
     int findTerminalIndex(QString terminal);
     QPair<int, int> findTerminal(QString terminal);
+
 
 };
 

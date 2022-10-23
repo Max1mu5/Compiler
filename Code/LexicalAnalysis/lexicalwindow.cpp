@@ -62,9 +62,44 @@ void LexicalWindow::recieveData(QString codeText)
     ui->textEdit->setText(tokensToText());
 }
 
+QList<QPair<int, int> > LexicalWindow::getNumTokens()
+{
+    return _numTokens;
+}
+
+QStringList LexicalWindow::getTableValues(QTableWidget *tw)
+{
+    QStringList temp;
+    for(int i = 0; i < tw->rowCount(); i++)
+    {
+        temp.append(tw->item(i, 0)->text());
+    }
+    return temp;
+}
+
 void LexicalWindow::on_startLexicalAnalyze_clicked()
 {
     emit requestData();
+}
+
+QStringList LexicalWindow::getTerminals()
+{
+    return getTableValues(ui->terminals);
+}
+
+QStringList LexicalWindow::getSeparators()
+{
+    return getTableValues(ui->separators);
+}
+
+QStringList LexicalWindow::getIdentifiers()
+{
+    return getTableValues(ui->identifiers);
+}
+
+QStringList LexicalWindow::getConstants()
+{
+    return getTableValues(ui->constants);
 }
 
 QString LexicalWindow::tokensToText()
@@ -155,6 +190,8 @@ void LexicalWindow::lexicalAnalyze()
         else
             buffer += _codeText[pos++];
     }
+
+
 
 }
 

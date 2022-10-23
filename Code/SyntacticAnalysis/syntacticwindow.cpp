@@ -21,6 +21,17 @@ SyntacticWindow::~SyntacticWindow()
     delete ui;
 }
 
+void SyntacticWindow::startSyntacticAnalysis(QString code,
+                                             QList<QPair<int, int>> numTokens,
+                                             QList<QStringList> tokens)
+{
+    on_pushButton_clicked();
+    syntAnal = new SyntAnal(code, recedenceMat->getTerminals(),
+                            recedenceMat->getRecedenceMat(), numTokens,
+                            tokens, recedenceMat->getFormalLang());
+    syntAnal->startSyntAnal();
+}
+
 
 void SyntacticWindow::on_pushButton_clicked()
 {
@@ -88,5 +99,6 @@ void SyntacticWindow::on_pushButton_clicked()
                                         new QTableWidgetItem(matrix[row][column]));
         }
     }
+
 }
 

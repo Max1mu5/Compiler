@@ -51,7 +51,7 @@
        </property>
        <column>
         <property name="text">
-         <string>Нетерминалы</string>
+         <string>Ключевые слова</string>
         </property>
        </column>
       </widget>
