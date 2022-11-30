@@ -4,7 +4,9 @@
 #include <QString>
 #include <QStack>
 
-class SyntAnal
+#include "errorhandler.h"
+
+class SyntAnal : public ErrorHandler
 {
 public:
     SyntAnal(QString code, QStringList terminals,
@@ -21,7 +23,17 @@ private:
     QList<QString> _stack;
     QList<QPair<int, int>> _numTokens;
     QList<QStringList> _tokens;
+    QList<QStringList>_formalLangRules;
     QString _formalLang;
+
+    int findFirstTerm(int startPos);
+    int getTerminalIndex(QString term);
+    void parseCode();
+    void parseFormalLang();
+    void addNeighbours(QString *chain, int pos);
+    int ruleNumber(QString chain);
+
+
 };
 
 #endif // SYNTANAL_H

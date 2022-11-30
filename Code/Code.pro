@@ -14,6 +14,7 @@ SOURCES += \
     SyntacticAnalysis/recedenceitem.cpp \
     SyntacticAnalysis/syntacticwindow.cpp \
     SyntacticAnalysis/syntanal.cpp \
+    errorhandler.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -23,6 +24,7 @@ HEADERS += \
     SyntacticAnalysis/recedenceitem.h \
     SyntacticAnalysis/syntacticwindow.h \
     SyntacticAnalysis/syntanal.h \
+    errorhandler.h \
     mainwindow.h
 
 FORMS += \

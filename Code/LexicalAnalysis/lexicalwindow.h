@@ -5,6 +5,7 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 
+
 namespace Ui {
 class LexicalWindow;
 }

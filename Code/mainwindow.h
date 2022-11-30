@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "./LexicalAnalysis/lexicalwindow.h"
 #include "./SyntacticAnalysis/syntacticwindow.h"
+#include "errorhandler.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -30,6 +31,7 @@ private:
     Ui::MainWindow *ui;
     LexicalWindow *lexicalwindow;
     SyntacticWindow *syntacticwindow;
+    ErrorHandler *_errorHandler;
 
     QTime *time;
 

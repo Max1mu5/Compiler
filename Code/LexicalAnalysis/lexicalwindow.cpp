@@ -30,6 +30,7 @@ LexicalWindow::LexicalWindow(QWidget *parent) :
     _terminals["%"] = -1;
     _terminals["$"] = -1;
     _terminals["to"] = -1;
+    _terminals["loop"] = -1;
 
     _separators[":"] = -1;
     _separators[";"] = -1;
@@ -56,7 +57,30 @@ LexicalWindow::~LexicalWindow()
 
 void LexicalWindow::recieveData(QString codeText)
 {
+    _numTokens = QList<QPair<int, int>>();
+//    ui->terminals->clear();
+//    ui->constants->clear();
+//    ui->identifiers->clear();
+//    ui->identifiers->clear();
+    ui->terminals->setRowCount(0);
+    ui->constants->setRowCount(0);
+    ui->identifiers->setRowCount(0);
+    ui->separators->setRowCount(0);
+
+    QHashIterator<QString, int> i(_terminals);
+    while (i.hasNext())
+    {
+        i.next();
+        _terminals[i.key()] = -1;
+    }
+    QHashIterator<QString, int> j(_separators);
+    while (j.hasNext())
+    {
+        j.next();
+        _separators[j.key()] = -1;
+    }
     this->_codeText = codeText;
+
     _codeText += " ";
     lexicalAnalyze();
     ui->textEdit->setText(tokensToText());

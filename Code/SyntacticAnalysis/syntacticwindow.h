@@ -6,6 +6,8 @@
 #include "recedence.h"
 #include "syntanal.h"
 
+#include "errorhandler.h"
+
 namespace Ui { class SyntacticWindow; }
 
 
@@ -20,13 +22,14 @@ public:
                                 QList<QPair<int, int>> numTokens,
                                 QList<QStringList> tokens);
 
+    SyntAnal *syntAnal;
+
 private slots:
     void on_pushButton_clicked();
 
 private:
     Ui::SyntacticWindow *ui;
     Recedence *recedenceMat;
-    SyntAnal *syntAnal;
 
 };
 #endif // SYNTACTICWINDOW_H
