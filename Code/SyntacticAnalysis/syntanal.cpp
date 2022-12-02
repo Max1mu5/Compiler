@@ -18,6 +18,7 @@ SyntAnal::SyntAnal(QString code, QStringList terminals,
 
 void SyntAnal::startSyntAnal()
 {
+    _ast = new Ast(_numTokens);
     parseCode();
     parseFormalLang();
 

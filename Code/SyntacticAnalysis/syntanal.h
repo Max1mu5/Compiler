@@ -5,6 +5,7 @@
 #include <QStack>
 
 #include "errorhandler.h"
+#include "ast.h"
 
 class SyntAnal : public ErrorHandler
 {
@@ -25,6 +26,8 @@ private:
     QList<QStringList> _tokens;
     QList<QStringList>_formalLangRules;
     QString _formalLang;
+
+    Ast *_ast;
 
     int findFirstTerm(int startPos);
     int getTerminalIndex(QString term);

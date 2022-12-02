@@ -8,6 +8,9 @@ enum nodeTypes
     PROGRAMM_END,
     COMMAND = 1,
     VAR_DECL = 6,
+    TYPE_INT,
+    TYPE_FLOAT,
+    TYPE_BOOL,
     VAR_ENUMERATION = 10,
     VAR_ASSIGNMENT = 19,
     MATH_EXP_ADD = 21,
@@ -27,6 +30,7 @@ enum nodeTypes
     WHILE_OP,
     READ_OP,
     WRITE_OP
+
 };
 
 class AstNode;
@@ -35,11 +39,13 @@ class Ast
 {
 public:
     Ast();
+    Ast(QList<QPair<int, int>> numTokens);
     void parse(int Op, QString token);
 
 private:
     QList<AstNode*> _nodeStack;
     QList<AstNode*> _context;
+    QList<QPair<int, int>> _numTokens;
 };
 
 class AstNode
@@ -47,13 +53,28 @@ class AstNode
 
 };
 
-class VarDecl : public AstNode
+class Var : public AstNode
 {
 public:
     QString varName;
+    AstNode *type;
+
+    Var(QString varName, QString type) : varName(varName), type(type) {}
+};
+
+class VarName : public AstNode
+{
+public:
+    QString name;
+    VarName(QString varName) : name(varName) {}
+};
+
+class VarType : public AstNode
+{
+public:
     QString type;
 
-    VarDecl(QString varName, QString type) : varName(varName), type(type) {}
+    VarType(QString type) : type(type) {}
 };
 
 class ValBool : public AstNode
@@ -83,7 +104,7 @@ public:
 class VarEnumeration : public AstNode
 {
 public:
-    QList<VarDecl> l;
+    //QList<VarDecl> l;
 
 };
 

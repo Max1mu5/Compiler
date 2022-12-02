@@ -5,7 +5,12 @@ Ast::Ast()
 
 }
 
-void Ast::parse(int Op, QString token)
+Ast::Ast(QList<QPair<int, int>> numTokens)
+{
+    _numTokens = numTokens;
+}
+
+void Ast::parse(int Op, QPair<int, int> token)
 {
     switch (Op)
     {
@@ -15,9 +20,28 @@ void Ast::parse(int Op, QString token)
     };
     case VAR_DECL:
     {
-        QStringList operands = token.split(":");
-        VarDecl *var = new VarDecl(operands[0], operands[1]);
+        AstNode *type = _context.takeLast();
+        AstNode *var = _context.takeLast();
+        Var *var = new Var(
         _context.push_back(var);
+        break;
+    }
+    case TYPE_INT:
+    {
+        VarType *type = new VarType("int");
+        _context.push_back(type);
+        break;
+    }
+    case TYPE_FLOAT:
+    {
+        VarType *type = new VarType("float");
+        _context.push_back(type);
+        break;
+    }
+    case TYPE_BOOL:
+    {
+        VarType *type = new VarType("bool");
+        _context.push_back(type);
         break;
     }
     case VAR_ASSIGNMENT:
@@ -39,7 +63,7 @@ void Ast::parse(int Op, QString token)
     }
     case MATH_EXP_SUB:
     {
-        QString op = "+";
+        QString op = "-";
         AstNode *rightExp = _context.takeLast();
         AstNode *leftExp = _context.takeLast();
         MathExp *mathExp = new MathExp(op, leftExp, rightExp);
@@ -48,7 +72,7 @@ void Ast::parse(int Op, QString token)
     }
     case MATH_EXP_MUL:
     {
-        QString op = "+";
+        QString op = "*";
         AstNode *rightExp = _context.takeLast();
         AstNode *leftExp = _context.takeLast();
         MathExp *mathExp = new MathExp(op, leftExp, rightExp);
@@ -57,7 +81,7 @@ void Ast::parse(int Op, QString token)
     }
     case MATH_EXP_DIV:
     {
-        QString op = "+";
+        QString op = "/";
         AstNode *rightExp = _context.takeLast();
         AstNode *leftExp = _context.takeLast();
         MathExp *mathExp = new MathExp(op, leftExp, rightExp);
@@ -90,6 +114,10 @@ void Ast::parse(int Op, QString token)
         CondExp *condExp = new CondExp(op, leftExp, rightExp);
         _context.push_back(condExp);
         break;
+    }
+    case VAR_NAME:
+    {
+        VarName *varName = new VarName(_numTokens[token.first][token.second]);
     }
     case IF_ELSE_ELSEIF_OP:
     {
