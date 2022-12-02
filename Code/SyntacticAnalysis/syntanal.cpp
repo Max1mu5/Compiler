@@ -61,14 +61,12 @@ void SyntAnal::startSyntAnal()
         if(recedenceStatus == ">.")
         {
             QString chain = "";
-            bool baseFind = false;
             //int tempTerm = 0;
             int leftTermStackIndex = findFirstTerm(0);
             int rightTermStackIndex = findFirstTerm(_stack.length() - leftTermStackIndex);
             while(leftTermStackIndex != -1 && rightTermStackIndex != -1
                   && _recedenceMat[getTerminalIndex(_stack[rightTermStackIndex])][getTerminalIndex(_stack[leftTermStackIndex])] == "=.")
             {
-                baseFind = true;
                 addNeighbours(&chain, leftTermStackIndex);
 
                 //addNeighbours(&chain, rightTermStackIndex);
@@ -82,8 +80,10 @@ void SyntAnal::startSyntAnal()
 
             chain.chop(1);
 
-            if(_formalLang.contains(chain))
+            if(ruleNumber(chain) >= 0)
+
                 _stack.append("T");
+
             else
             {
                 emit emitError("Syntactical error between: " +
@@ -97,7 +97,17 @@ void SyntAnal::startSyntAnal()
 
 int SyntAnal::ruleNumber(QString chain)
 {
-
+    int ruleCounter = 0;
+    for(int i = 0; i < _formalLangRules.length(); i++)
+    {
+        for(int j = 0; j < _formalLangRules[i].length(); j++)
+        {
+            if(chain == _formalLangRules[i][j])
+                return ruleCounter;
+            ruleCounter++;
+        }
+    }
+    return -1;
 }
 
 void SyntAnal::addNeighbours(QString *chain, int pos)
@@ -172,8 +182,17 @@ void SyntAnal::parseFormalLang()
         _formalLang.replace(tempFormalLangTokens[tempFormalLang.length() - 1 - i][0], "T");
     }
 
-    QStringList tempFormalLang = _formalLang.split("\n");
-    for(int i = 0; i < )
+    tempFormalLang = _formalLang.split("\n");
+    for(int i = 0; i < tempFormalLang.length(); i++)
+    {
+        //_formalLangRules
+        tempFormalLang[i].remove(0, 4);
+        _formalLangRules.append(tempFormalLang[i].split("|"));
+        for(int j = 0 ; j < _formalLangRules[i].length(); j++)
+        {
+            _formalLangRules[i][j] = _formalLangRules[i][j].trimmed();
+        }
+    }
 
 
 }

@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     LexicalAnalysis/lexicalwindow.cpp \
+    SyntacticAnalysis/ast.cpp \
     SyntacticAnalysis/recedence.cpp \
     SyntacticAnalysis/recedenceitem.cpp \
     SyntacticAnalysis/syntacticwindow.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
 
 HEADERS += \
     LexicalAnalysis/lexicalwindow.h \
+    SyntacticAnalysis/ast.h \
     SyntacticAnalysis/recedence.h \
     SyntacticAnalysis/recedenceitem.h \
     SyntacticAnalysis/syntacticwindow.h \
@@ -40,4 +42,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    SyntacticAnalysis/enumExpressions.inc \
     SyntacticAnalysis/formalLang.txt
