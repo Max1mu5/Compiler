@@ -5,7 +5,7 @@ Ast::Ast()
 
 }
 
-Ast::Ast(QList<QPair<int, int>> numTokens)
+Ast::Ast(QList<QStringList> numTokens)
 {
     _numTokens = numTokens;
 }
@@ -21,9 +21,9 @@ void Ast::parse(int Op, QPair<int, int> token)
     case VAR_DECL:
     {
         AstNode *type = _context.takeLast();
-        AstNode *var = _context.takeLast();
-        Var *var = new Var(
-        _context.push_back(var);
+        AstNode *varName = _context.takeLast();
+        Var *vare = new Var(varName, type);
+        _context.push_back(vare);
         break;
     }
     case TYPE_INT:
@@ -118,6 +118,10 @@ void Ast::parse(int Op, QPair<int, int> token)
     case VAR_NAME:
     {
         VarName *varName = new VarName(_numTokens[token.first][token.second]);
+        _context.push_back(varName);
+
+        break;
+
     }
     case IF_ELSE_ELSEIF_OP:
     {

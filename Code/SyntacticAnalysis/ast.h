@@ -39,13 +39,13 @@ class Ast
 {
 public:
     Ast();
-    Ast(QList<QPair<int, int>> numTokens);
-    void parse(int Op, QString token);
+    Ast(QList<QStringList> tokens);
+    void parse(int Op, QPair<int, int> token);
 
 private:
     QList<AstNode*> _nodeStack;
     QList<AstNode*> _context;
-    QList<QPair<int, int>> _numTokens;
+    QList<QStringList> _numTokens;
 };
 
 class AstNode
@@ -56,10 +56,10 @@ class AstNode
 class Var : public AstNode
 {
 public:
-    QString varName;
+    AstNode *varName;
     AstNode *type;
 
-    Var(QString varName, QString type) : varName(varName), type(type) {}
+    Var(AstNode *varName, AstNode *type) : varName(varName), type(type) {}
 };
 
 class VarName : public AstNode

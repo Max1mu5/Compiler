@@ -18,7 +18,7 @@ SyntAnal::SyntAnal(QString code, QStringList terminals,
 
 void SyntAnal::startSyntAnal()
 {
-    _ast = new Ast(_numTokens);
+    _ast = new Ast(_tokens);
     parseCode();
     parseFormalLang();
 
@@ -47,7 +47,7 @@ void SyntAnal::startSyntAnal()
 
         if(recedenceStatus.isEmpty())
         {
-            emit emitError("Syntactical error between: " +
+            qDebug() << ("Syntactical error between: " +
                       _terminals[firstTerminalPos] + " и " + _terminals[nextToken]);
             return;
         }
@@ -82,12 +82,16 @@ void SyntAnal::startSyntAnal()
             chain.chop(1);
 
             if(ruleNumber(chain) >= 0)
-
+            {
                 _stack.append("T");
+                itNumTokens--;
+                _ast->parse(ruleNumber(chain), {itNumTokens->first, itNumTokens->second});
+                itNumTokens++;
+            }
 
             else
             {
-                emit emitError("Syntactical error between: " +
+                qDebug() << ("Syntactical error between: " +
                           _terminals[firstTerminalPos] + " и " + _terminals[nextToken]);
                 return;
             }
