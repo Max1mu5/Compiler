@@ -6,31 +6,7 @@
 enum nodeTypes
 {
     PROGRAMM_END,
-    COMMAND = 1,
-    VAR_DECL = 6,
-    TYPE_INT,
-    TYPE_FLOAT,
-    TYPE_BOOL,
-    VAR_ENUMERATION = 10,
-    VAR_ASSIGNMENT = 19,
-    MATH_EXP_ADD = 21,
-    MATH_EXP_SUB,
-    MATH_EXP_MUL,
-    MATH_EXP_DIV,
-    COND_EXP_MORE,
-    COND_EXP_LESS,
-    COND_EXP_EQ,
-    VAR_NAME,
-    IF_ELSE_ELSEIF_OP,
-    IF_ELSE_OP,
-    IF_OP,
-    FOR_OP,
-    FOR_STEP_COND,
-    FOR_COND,
-    WHILE_OP,
-    READ_OP,
-    WRITE_OP
-
+    #include "enumExpressions.inc"
 };
 
 class AstNode;
@@ -50,7 +26,10 @@ private:
 
 class AstNode
 {
-
+public:
+    //int nodeId;
+    //AstNode(int id) : nodeId(id) {}
+    virtual ~AstNode() = default;
 };
 
 class Var : public AstNode
@@ -104,7 +83,10 @@ public:
 class VarEnumeration : public AstNode
 {
 public:
-    //QList<VarDecl> l;
+    AstNode *prev;
+    AstNode *next;
+
+    VarEnumeration(AstNode *prev, AstNode *next) : prev(prev), next(next) {}
 
 };
 

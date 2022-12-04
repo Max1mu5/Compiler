@@ -1,4 +1,5 @@
 #include "ast.h"
+#include "QDebug"
 
 Ast::Ast()
 {
@@ -36,6 +37,14 @@ void Ast::parse(int Op, QPair<int, int> token)
     {
         VarType *type = new VarType("float");
         _context.push_back(type);
+        break;
+    }
+    case VAR_ENUMERATION:
+    {
+        AstNode *next = _context.takeLast();
+        AstNode *prev = _context.takeLast();
+        VarEnumeration *varEnum = new VarEnumeration(prev, next);
+        _context.push_back(varEnum);
         break;
     }
     case TYPE_BOOL:
@@ -119,9 +128,14 @@ void Ast::parse(int Op, QPair<int, int> token)
     {
         VarName *varName = new VarName(_numTokens[token.first][token.second]);
         _context.push_back(varName);
-
+        //qDebug() << dynamic_cast<VarName*>(_context[0])->name;
         break;
 
+    }
+    case CONST:
+    {
+        //if(_numTokens[token.first][token.second])
+        break;
     }
     case IF_ELSE_ELSEIF_OP:
     {

@@ -91,8 +91,7 @@ void SyntAnal::startSyntAnal()
 
             else
             {
-                qDebug() << ("Syntactical error between: " +
-                          _terminals[firstTerminalPos] + " и " + _terminals[nextToken]);
+                qDebug() << ("Syntactical error between: " + chain);
                 return;
             }
 
@@ -160,7 +159,7 @@ void SyntAnal::parseCode()
     }
     for(int i = 0; i < _tokens[3].length(); i++)
     {
-        _tokens[3][i] = "ind";
+        _tokens[3][i] = "const";
     }
     for(int i = 0; i < _tokens[1].length(); i++)
     {
