@@ -14,22 +14,52 @@ class AstNode;
 class Ast
 {
 public:
-    Ast();
+    Ast() {};
     Ast(QList<QStringList> tokens);
     void parse(int Op, QPair<int, int> token);
+    QString printedNodes();
 
 private:
     QList<AstNode*> _nodeStack;
     QList<AstNode*> _context;
     QList<QStringList> _numTokens;
+    AstNode *root;
 };
 
 class AstNode
 {
 public:
-    //int nodeId;
-    //AstNode(int id) : nodeId(id) {}
+    int nodeId;
+    AstNode(int id) : nodeId(id) {}
     virtual ~AstNode() = default;
+    virtual QString printNode(int callLevel = 0)
+    {
+        return "ERROR HERE";
+    };
+protected:
+    QString moveCursor(int count)
+    {
+        QString space = "";
+        for(int i = 0; i < count; i++) space += "\t";
+        return space;
+    }
+};
+
+class CommandChain : public AstNode
+{
+public:
+    AstNode *leftNode;
+    AstNode *rightNode;
+
+    CommandChain(AstNode *leftNode, AstNode *rightNode) : AstNode(1), leftNode(leftNode), rightNode(rightNode) {}
+    QString printNode(int callLevel = 0)
+    {
+        int newPos = callLevel;
+        if(callLevel >= 1) newPos -= 1;
+        return  moveCursor(newPos) + "COMMAND_CHAIN\n"
+                    + leftNode->printNode(newPos + 1)
+                    + rightNode->printNode(newPos + 1);
+    }
 };
 
 class Var : public AstNode
@@ -38,14 +68,25 @@ public:
     AstNode *varName;
     AstNode *type;
 
-    Var(AstNode *varName, AstNode *type) : varName(varName), type(type) {}
+    Var(AstNode *varName, AstNode *type) : AstNode(8), varName(varName), type(type) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "VAR_DECLARATION\n"
+                    + varName->printNode(callLevel + 1)
+                    + type->printNode(callLevel + 1);
+    }
 };
 
 class VarName : public AstNode
 {
 public:
     QString name;
-    VarName(QString varName) : name(varName) {}
+    VarName(QString varName) : AstNode(30), name(varName) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "VAR_NAME\n"
+                    + moveCursor(callLevel + 1) + name + "\n";
+    }
 };
 
 class VarType : public AstNode
@@ -53,7 +94,12 @@ class VarType : public AstNode
 public:
     QString type;
 
-    VarType(QString type) : type(type) {}
+    VarType(QString type) : AstNode(7), type(type) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "VAR_TYPE\n"
+                    + moveCursor(callLevel + 1) + type + "\n";
+    }
 };
 
 class ValBool : public AstNode
@@ -61,7 +107,12 @@ class ValBool : public AstNode
 public:
     bool value;
 
-    ValBool(bool value) : value(value) {}
+    ValBool(bool value) : AstNode(11), value(value) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "VAL_BOOL\n"
+                    + moveCursor(callLevel + 1) + QString::number(value) + "\n";
+    }
 };
 
 class ValFloat : public AstNode
@@ -69,7 +120,12 @@ class ValFloat : public AstNode
 public:
     float value;
 
-    ValFloat(float value) : value(value) {}
+    ValFloat(float value) : AstNode(9), value(value) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "VAL_FLOAT\n"
+                    + moveCursor(callLevel + 1) + QString::number(value) + "\n";
+    }
 };
 
 class ValInt : public AstNode
@@ -77,7 +133,12 @@ class ValInt : public AstNode
 public:
     int value;
 
-    ValInt(int value) : value(value) {}
+    ValInt(int value) : AstNode(10), value(value) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "VAL_INT\n"
+                    + moveCursor(callLevel + 1) + QString::number(value) + "\n";
+    }
 };
 
 class VarEnumeration : public AstNode
@@ -86,8 +147,13 @@ public:
     AstNode *prev;
     AstNode *next;
 
-    VarEnumeration(AstNode *prev, AstNode *next) : prev(prev), next(next) {}
-
+    VarEnumeration(AstNode *prev, AstNode *next) : AstNode(12), prev(prev), next(next) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "VAR_ENUMERATION\n"
+                    + prev->printNode(callLevel + 1)
+                    + next->printNode(callLevel + 1);
+    }
 };
 
 class MathExp : public AstNode
@@ -97,7 +163,13 @@ public:
     AstNode *leftExp;
     AstNode *rightExp;
 
-    MathExp(QString op, AstNode *leftExp, AstNode *rightExp) : op(op), leftExp(leftExp), rightExp(rightExp) {}
+    MathExp(QString op, AstNode *leftExp, AstNode *rightExp) : AstNode(23), op(op), leftExp(leftExp), rightExp(rightExp) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "MATH_EXP " + op + "\n"
+                    + leftExp->printNode(callLevel + 1)
+                    + rightExp->printNode(callLevel + 1);
+    }
 };
 
 class CondExp : public AstNode
@@ -107,7 +179,13 @@ public:
     AstNode *leftExp;
     AstNode *rightExp;
 
-    CondExp(QString op, AstNode *leftExp, AstNode *rightExp) : op(op), leftExp(leftExp), rightExp(rightExp) {}
+    CondExp(QString op, AstNode *leftExp, AstNode *rightExp) : AstNode(27), op(op), leftExp(leftExp), rightExp(rightExp) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "COND_EXP " + op + "\n"
+                    + leftExp->printNode(callLevel + 1)
+                    + rightExp->printNode(callLevel + 1);
+    }
 };
 
 class ForExpCond : public AstNode
@@ -116,7 +194,13 @@ public:
     AstNode *leftExp;
     AstNode *rightExp;
 
-    ForExpCond(AstNode *leftExp, AstNode *rightExp) : leftExp(leftExp), rightExp(rightExp) {}
+    ForExpCond(AstNode *leftExp, AstNode *rightExp) : AstNode(38), leftExp(leftExp), rightExp(rightExp) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "FOR_COND_EXP\n"
+                    + leftExp->printNode(callLevel + 1)
+                    + rightExp->printNode(callLevel + 1);
+    }
 };
 
 class ForStepExpCond : public AstNode
@@ -126,7 +210,14 @@ public:
     AstNode *leftExp;
     AstNode *rightExp;
 
-    ForStepExpCond(AstNode *step, AstNode *leftExp, AstNode *rightExp) : step(step), leftExp(leftExp), rightExp(rightExp) {}
+    ForStepExpCond(AstNode *step, AstNode *leftExp, AstNode *rightExp) : AstNode(37), step(step), leftExp(leftExp), rightExp(rightExp) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "FOR_STEP_COND_EXP\n"
+                    + step->printNode(callLevel + 1)
+                    + leftExp->printNode(callLevel + 1)
+                    + rightExp->printNode(callLevel + 1);
+    }
 };
 
 class ForOp : public AstNode
@@ -135,7 +226,13 @@ public:
     AstNode *cond;
     AstNode *body;
 
-    ForOp(AstNode *cond, AstNode *body) : cond(cond), body(body) {}
+    ForOp(AstNode *cond, AstNode *body) : AstNode(35), cond(cond), body(body) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "FOR_OPERATOR\n"
+                    + cond->printNode(callLevel + 1)
+                    + body->printNode(callLevel + 1);
+    }
 };
 
 class WhileOp : public AstNode
@@ -144,7 +241,13 @@ public:
     AstNode *cond;
     AstNode *body;
 
-    WhileOp(AstNode *cond, AstNode *body) : cond(cond), body(body) {}
+    WhileOp(AstNode *cond, AstNode *body) : AstNode(39), cond(cond), body(body) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "WHILE_OPERATOR\n"
+                    + cond->printNode(callLevel + 1)
+                    + body->printNode(callLevel + 1);
+    }
 };
 
 class IfOp : public AstNode
@@ -153,7 +256,14 @@ public:
     AstNode *cond;
     AstNode *body;
 
-    IfOp(AstNode *cond, AstNode *body) : cond(cond), body(body) {}
+    IfOp(AstNode *cond, AstNode *body) : AstNode(34), cond(cond), body(body) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "IF_OPERATOR\n"
+                    + cond->printNode(callLevel + 1)
+                    + moveCursor(callLevel + 1) + "TRUE_STATEMENT\n"
+                    + body->printNode(callLevel + 2);
+    }
 };
 
 class IfElseOp : public AstNode
@@ -163,7 +273,16 @@ public:
     AstNode *bodyTrue;
     AstNode *bodyFalse;
 
-    IfElseOp(AstNode *cond, AstNode *bodyTrue, AstNode *bodyFalse) : cond(cond), bodyTrue(bodyTrue), bodyFalse(bodyFalse) {}
+    IfElseOp(AstNode *cond, AstNode *bodyTrue, AstNode *bodyFalse) :  AstNode(33), cond(cond), bodyTrue(bodyTrue), bodyFalse(bodyFalse) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "IF_ELSE_OPERATOR\n"
+                    + cond->printNode(callLevel + 1)
+                    + moveCursor(callLevel + 1) + "TRUE_STATEMENT\n"
+                    + bodyTrue->printNode(callLevel + 2)
+                    + moveCursor(callLevel + 1) + "FALSE_STATEMENT\n"
+                    + bodyFalse->printNode(callLevel + 2);
+    }
 };
 
 class IfElseifElse : public AstNode
@@ -179,9 +298,27 @@ public:
 
     IfElseifElse(AstNode *firstCond, AstNode *firstBodyTrue,
                  AstNode *secondCond, AstNode *secondBodyTrue,
-                 AstNode *bodyFalse) : firstCond(firstCond), firstBodyTrue(firstBodyTrue),
+                 AstNode *bodyFalse) :  AstNode(32), firstCond(firstCond), firstBodyTrue(firstBodyTrue),
                                        secondCond(secondCond), secondBodyTrue(secondBodyTrue),
                                        bodyFalse(bodyFalse) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "IF_ESLEIF_ELSE_OPERATOR\n"
+                    + moveCursor(callLevel + 1) + "FIRST_COND\n"
+                    + firstCond->printNode(callLevel + 2)
+
+                    + moveCursor(callLevel + 1) + "FISRT_TRUE_STATEMENT\n"
+                    + firstBodyTrue->printNode(callLevel + 2)
+
+                    + moveCursor(callLevel + 1) + "SECOND_COND\n"
+                    + secondCond->printNode(callLevel + 2)
+
+                    + moveCursor(callLevel + 1) + "SECOND_TRUE_STATEMENT\n"
+                    + secondBodyTrue->printNode(callLevel + 2)
+
+                    + moveCursor(callLevel + 1) + "FALSE_STATEMENT\n"
+                    + bodyFalse->printNode(callLevel + 2);
+    }
 };
 
 class VarAsmt : public AstNode
@@ -190,7 +327,13 @@ public:
     AstNode *var;
     AstNode *exp;
 
-    VarAsmt(AstNode *var, AstNode *exp) : var(var), exp(exp) {}
+    VarAsmt(AstNode *var, AstNode *exp) :  AstNode(21), var(var), exp(exp) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "VAR_ASSIGMENT\n"
+                    + var->printNode(callLevel + 1)
+                    + exp->printNode(callLevel + 1);
+    }
 };
 
 class ReadOp : public AstNode
@@ -198,7 +341,12 @@ class ReadOp : public AstNode
 public:
     AstNode *exp;
 
-    ReadOp(AstNode *exp) : exp(exp) {}
+    ReadOp(AstNode *exp) :  AstNode(40), exp(exp) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "READ_OPERATOR\n"
+                    + exp->printNode(callLevel + 1);
+    }
 };
 
 class WriteOp : public AstNode
@@ -206,7 +354,12 @@ class WriteOp : public AstNode
 public:
     AstNode *exp;
 
-    WriteOp(AstNode *exp) : exp(exp) {}
+    WriteOp(AstNode *exp) :  AstNode(41), exp(exp) {}
+    QString printNode(int callLevel = 0)
+    {
+        return  moveCursor(callLevel) + "WRITE_OPERATOR\n"
+                    + exp->printNode(callLevel + 1);
+    }
 };
 
 

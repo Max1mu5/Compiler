@@ -1,11 +1,6 @@
 #include "ast.h"
 #include "QDebug"
 
-Ast::Ast()
-{
-
-}
-
 Ast::Ast(QList<QStringList> numTokens)
 {
     _numTokens = numTokens;
@@ -15,9 +10,14 @@ void Ast::parse(int Op, QPair<int, int> token)
 {
     switch (Op)
     {
-    case COMMAND:
+    case COMMAND_CHAIN:
+    case 2:
     {
-        //Возможно нуждна свертка и очистка текущего контекста, запушить в стек ветку, хз пока
+        AstNode *rightNode = _context.takeLast();
+        AstNode *leftNode = _context.takeLast();
+        CommandChain *commandChain = new CommandChain(leftNode, rightNode);
+        _context.push_back(commandChain);
+        break;
     };
     case VAR_DECL:
     {
@@ -25,17 +25,19 @@ void Ast::parse(int Op, QPair<int, int> token)
         AstNode *varName = _context.takeLast();
         Var *vare = new Var(varName, type);
         _context.push_back(vare);
+
+
         break;
     }
     case TYPE_INT:
     {
-        VarType *type = new VarType("int");
+        VarType *type = new VarType("INT");
         _context.push_back(type);
         break;
     }
     case TYPE_FLOAT:
     {
-        VarType *type = new VarType("float");
+        VarType *type = new VarType("FLOAT");
         _context.push_back(type);
         break;
     }
@@ -49,7 +51,7 @@ void Ast::parse(int Op, QPair<int, int> token)
     }
     case TYPE_BOOL:
     {
-        VarType *type = new VarType("bool");
+        VarType *type = new VarType("BOOL");
         _context.push_back(type);
         break;
     }
@@ -134,7 +136,18 @@ void Ast::parse(int Op, QPair<int, int> token)
     }
     case CONST:
     {
-        //if(_numTokens[token.first][token.second])
+        if(_numTokens[token.first][token.second].contains("."))
+        {
+            float val = _numTokens[token.first][token.second].toFloat();
+            ValFloat *floatVal = new ValFloat(val);
+            _context.push_back(floatVal);
+        }
+        else
+        {
+            float val = _numTokens[token.first][token.second].toInt();
+            ValInt *floatInt = new ValInt(val);
+            _context.push_back(floatInt);
+        }
         break;
     }
     case IF_ELSE_ELSEIF_OP:
@@ -225,4 +238,10 @@ void Ast::parse(int Op, QPair<int, int> token)
 
 
     }
+    root = _context[0];
+}
+
+QString Ast::printedNodes()
+{
+    return root->printNode();
 }

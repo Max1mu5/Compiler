@@ -16,6 +16,9 @@ SyntAnal::SyntAnal(QString code, QStringList terminals,
     _formalLang = formalLang;
 }
 
+#include <QFile>
+
+
 void SyntAnal::startSyntAnal()
 {
     _ast = new Ast(_tokens);
@@ -40,6 +43,13 @@ void SyntAnal::startSyntAnal()
                 nextToken == _terminals.length() - 1)
         {
             qDebug() << "No syntactical error";
+            //qDebug() <<_ast->printedNodes();
+            QFile data("output.txt");
+            if (data.open(QFile::WriteOnly | QFile::Truncate)) {
+                QTextStream out(&data);
+                out << _ast->printedNodes();
+                // writes "Result: 3.14      2.7       "
+            }
             return;
         }
 
@@ -85,13 +95,14 @@ void SyntAnal::startSyntAnal()
             {
                 _stack.append("T");
                 itNumTokens--;
+                //qDebug() << chain;
                 _ast->parse(ruleNumber(chain), {itNumTokens->first, itNumTokens->second});
                 itNumTokens++;
             }
 
             else
             {
-                qDebug() << ("Syntactical error between: " + chain);
+                qDebug() << ("Syntactical error between: " + _terminals[firstTerminalPos] + " и " + _terminals[nextToken]);
                 return;
             }
 
@@ -170,6 +181,14 @@ void SyntAnal::parseCode()
     {
         if(_terminals[i] == "\\n")
             _terminals[i] = "newLine";
+    }
+
+    for(int i = 0; i < _numTokens.length() - 1; i++)
+    {
+        if(_numTokens[i] == _numTokens[i+1]
+                && ( _tokens[_numTokens[i].first][_numTokens[i].second] == "newLine"
+                || _tokens[_numTokens[i].first][_numTokens[i].second] == ";"))
+                _numTokens.remove(i);
     }
 
 }
