@@ -3,10 +3,34 @@
 
 #include <QList>
 
-enum nodeTypes
+enum convolutionRule
 {
     PROGRAMM_END,
     #include "enumExpressions.inc"
+};
+
+enum nodeType
+{
+    COMMAND_CHAIN_NODE = 1,
+    VAR_NODE = 8,
+    VAR_NAME_NODE = 30,
+    VAR_TYPE_NODE = 7,
+    VAL_BOOL_NODE = 11,
+    VAL_FLOAT_NODE = 9,
+    VAL_INT_NODE = 10,
+    VAR_ENUMERATION_MODE = 12,
+    MATH_EXP_NODE = 23,
+    COND_EXP_NODE = 27,
+    FOR_EXP_COND_NODE = 38,
+    FOR_STEP_EXP_COND_NODE = 37,
+    FOR_OP_NODE = 35,
+    WHILE_OP_NODE = 39,
+    IF_OP_NODE = 34,
+    IF_ELSE_OP_NODE = 33,
+    IF_ELSEIF_ELSE_NODE = 32,
+    VAR_ASMT_NODE = 21,
+    READ_OP_NODE = 40,
+    WRITE_OP_NODE = 41
 };
 
 class AstNode;

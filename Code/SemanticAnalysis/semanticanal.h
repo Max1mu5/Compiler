@@ -7,12 +7,17 @@
 class SemanticAnal
 {
 public:
-    SemanticAnal(Ast *root) : _root(root) {}
+    SemanticAnal(AstNode *root) : _root(root) {}
     void startSemantic();
 
  private:
-    Ast *_root;
+    AstNode *_root;
+    AstNode* visit(AstNode *currentNode);
     QList<AstNode*> _declaredVariables;
+
+    void visitor(AstNode *currentNode);
+    bool isTypeMatching(AstNode *varAsmnNode);
+    bool isDeclared(AstNode *varNameNode);
 };
 
 #endif // SEMANTICANAL_H
