@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "./LexicalAnalysis/lexicalwindow.h"
 #include "./SyntacticAnalysis/syntacticwindow.h"
+#include "./SemanticAnalysis/semanticanal.h"
 #include "errorhandler.h"
 
 
@@ -31,6 +32,7 @@ private:
     Ui::MainWindow *ui;
     LexicalWindow *lexicalwindow;
     SyntacticWindow *syntacticwindow;
+    SemanticAnal *semanticAnal;
     ErrorHandler *_errorHandler;
 
     QTime *time;

@@ -62,6 +62,7 @@ void MainWindow::on_action_3_triggered()
                                                                lexicalwindow->getIdentifiers(),
                                                                lexicalwindow->getConstants()});
 
+    buildOutput("Запускается семантический анализ");
 
 
 
