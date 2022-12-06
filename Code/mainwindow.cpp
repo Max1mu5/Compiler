@@ -63,6 +63,8 @@ void MainWindow::on_action_3_triggered()
                                                                lexicalwindow->getConstants()});
 
 
+
+
     buildOutput("Завершение компиляции");
 }
 

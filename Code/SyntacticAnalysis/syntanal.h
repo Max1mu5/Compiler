@@ -16,6 +16,7 @@ public:
              QList<QStringList> tokens,
              QString formalLang);
     void startSyntAnal();
+    Ast* getAst();
 
 private:
     QString _code;

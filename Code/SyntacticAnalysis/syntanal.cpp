@@ -18,6 +18,11 @@ SyntAnal::SyntAnal(QString code, QStringList terminals,
 
 #include <QFile>
 
+Ast* SyntAnal::getAst()
+{
+    return _ast;
+}
+
 
 void SyntAnal::startSyntAnal()
 {
