@@ -18,9 +18,9 @@ SyntAnal::SyntAnal(QString code, QStringList terminals,
 
 #include <QFile>
 
-Ast* SyntAnal::getAst()
+AstNode* SyntAnal::getAst()
 {
-    return _ast;
+    return _ast->root;
 }
 
 

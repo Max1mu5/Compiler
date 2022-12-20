@@ -42,12 +42,12 @@ public:
     Ast(QList<QStringList> tokens);
     void parse(int Op, QPair<int, int> token);
     QString printedNodes();
+    AstNode *root;
 
 private:
     QList<AstNode*> _nodeStack;
     QList<AstNode*> _context;
     QList<QStringList> _numTokens;
-    AstNode *root;
 };
 
 class AstNode

@@ -32,7 +32,6 @@ private:
     Ui::MainWindow *ui;
     LexicalWindow *lexicalwindow;
     SyntacticWindow *syntacticwindow;
-    SemanticAnal *semanticAnal;
     ErrorHandler *_errorHandler;
 
     QTime *time;

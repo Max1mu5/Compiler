@@ -63,8 +63,8 @@ void MainWindow::on_action_3_triggered()
                                                                lexicalwindow->getConstants()});
 
     buildOutput("Запускается семантический анализ");
-
-
+    SemanticAnal semanticAnal(syntacticwindow->syntAnal->getAst());
+    semanticAnal.startSemantic();
 
     buildOutput("Завершение компиляции");
 }
