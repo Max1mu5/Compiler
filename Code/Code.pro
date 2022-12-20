@@ -9,6 +9,9 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    CodeGenerating/codegenerating.cpp \
+    CodeGenerating/context.cpp \
+    CodeGenerating/nasmformatedcommands.cpp \
     LexicalAnalysis/lexicalwindow.cpp \
     SemanticAnalysis/semanticanal.cpp \
     SyntacticAnalysis/ast.cpp \
@@ -21,6 +24,9 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    CodeGenerating/codegenerating.h \
+    CodeGenerating/context.h \
+    CodeGenerating/nasmformatedcommands.h \
     LexicalAnalysis/lexicalwindow.h \
     SemanticAnalysis/semanticanal.h \
     SyntacticAnalysis/ast.h \

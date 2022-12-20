@@ -9,11 +9,11 @@ class SemanticAnal
 public:
     SemanticAnal(AstNode *root) : _root(root) {}
     void startSemantic();
+    QList<AstNode*> _declaredVariables;
 
  private:
     AstNode *_root;
     AstNode* visit(AstNode *currentNode);
-    QList<AstNode*> _declaredVariables;
 
     void visitor(AstNode *currentNode);
     void expVisitor(AstNode *currentNode, QList<AstNode*> &types);

@@ -17,8 +17,9 @@ void SemanticAnal::visitor(AstNode *currentNode)
         CommandChain *chain = dynamic_cast<CommandChain*>(currentNode);
         visitor(chain->leftNode);
         visitor(chain->rightNode);
+        break;
     }
-    case VAR_NODE:
+    case VAR_DECL_NODE:
     {
         _declaredVariables.push_back(currentNode);
         break;

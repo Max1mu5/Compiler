@@ -12,7 +12,7 @@ enum convolutionRule
 enum nodeType
 {
     COMMAND_CHAIN_NODE = 1,
-    VAR_NODE = 8,
+    VAR_DECL_NODE = 8,
     VAR_NAME_NODE = 30,
     VAR_TYPE_NODE = 7,
     VAL_BOOL_NODE = 11,

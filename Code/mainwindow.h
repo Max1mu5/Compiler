@@ -5,6 +5,7 @@
 #include "./LexicalAnalysis/lexicalwindow.h"
 #include "./SyntacticAnalysis/syntacticwindow.h"
 #include "./SemanticAnalysis/semanticanal.h"
+#include "./CodeGenerating/codegenerating.h"
 #include "errorhandler.h"
 
 

@@ -66,7 +66,13 @@ void MainWindow::on_action_3_triggered()
     SemanticAnal semanticAnal(syntacticwindow->syntAnal->getAst());
     semanticAnal.startSemantic();
 
+    buildOutput("Запускается генерация кода");
+    CodeGenerating codeGenerating(syntacticwindow->syntAnal->getAst(), semanticAnal._declaredVariables);
+    codeGenerating.startCodeGenerating();
+
     buildOutput("Завершение компиляции");
+
+
 }
 
 void MainWindow::buildOutput(QString text)
