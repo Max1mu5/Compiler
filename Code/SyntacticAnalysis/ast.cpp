@@ -10,12 +10,13 @@ void Ast::parse(int Op, QPair<int, int> token)
 {
     switch (Op)
     {
+    case 0:
     case COMMAND_CHAIN:
     case 2:
     {
         AstNode *rightNode = _context.takeLast();
         AstNode *leftNode = _context.takeLast();
-        CommandChain *commandChain = new CommandChain(leftNode, rightNode);
+        auto *commandChain = new CommandChain(leftNode, rightNode);
         _context.push_back(commandChain);
         break;
     };

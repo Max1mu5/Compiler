@@ -1,6 +1,7 @@
 #include "syntanal.h"
 
 #include <QDebug>
+#include <QMessageBox>
 
 SyntAnal::SyntAnal(QString code, QStringList terminals,
                    QList<QList<QString>> recedenceMat,
@@ -64,6 +65,11 @@ void SyntAnal::startSyntAnal()
         {
             qDebug() << ("Syntactical error between: " +
                       _terminals[firstTerminalPos] + " и " + _terminals[nextToken]);
+            QMessageBox msgBox;
+            msgBox.critical(0,"Error","Syntactical error between: " +
+                            _terminals[firstTerminalPos] + " и " + _terminals[nextToken]);
+            msgBox.setFixedSize(500,200);
+            msgBox.exec();
             return;
         }
 
@@ -107,7 +113,12 @@ void SyntAnal::startSyntAnal()
 
             else
             {
-                qDebug() << ("Syntactical error between: " + _terminals[firstTerminalPos] + " и " + _terminals[nextToken]);
+                qDebug() << ("Syntactical error between: " + _terminals[firstTerminalPos] + " and " + _terminals[nextToken]);
+                QMessageBox msgBox;
+                msgBox.critical(0,"Error","Syntactical error between: " +
+                                _terminals[firstTerminalPos] + " и " + _terminals[nextToken]);
+                msgBox.setFixedSize(500,200);
+                msgBox.exec();
                 return;
             }
 
@@ -188,6 +199,7 @@ void SyntAnal::parseCode()
             _terminals[i] = "newLine";
     }
 
+
     for(int i = 0; i < _numTokens.length() - 1; i++)
     {
         if(_numTokens[i] == _numTokens[i+1]
@@ -196,6 +208,13 @@ void SyntAnal::parseCode()
                 _numTokens.remove(i);
     }
 
+
+    for(int i = 0; i < _numTokens.length() - 1; i++)
+    {
+        if((_tokens[_numTokens[i].first][_numTokens[i].second] == ";") &&
+                (_tokens[_numTokens[i+1].first][_numTokens[i+1].second] == "newLine"))
+                _numTokens.remove(i+1);
+    }
 }
 
 void SyntAnal::parseFormalLang()

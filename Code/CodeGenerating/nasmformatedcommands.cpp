@@ -2,8 +2,6 @@
 
 NASMFormatedCommands::NASMFormatedCommands()
 {
-
-
     typeMapping.insert("INT", "4");
     typeMapping.insert("FLOAT", "4");
     typeMapping.insert("BOOL", "1");
@@ -12,6 +10,14 @@ NASMFormatedCommands::NASMFormatedCommands()
     mathOpMapping.insert("-", "sub");
     mathOpMapping.insert("*", "mul");
     mathOpMapping.insert("/", "div");
+
+    condOpMapping.insert(">", "jl");
+    condOpMapping.insert("<", "jg");
+    condOpMapping.insert("=", "je");
+
+    condInverseOpMapping.insert("<", "jge");
+    condInverseOpMapping.insert(">", "jle");
+    condInverseOpMapping.insert("=", "jne");
 
     NASMLanguageStructure.insert(LIB,
                                  "%include \"io64.inc\"\n\n");
@@ -40,8 +46,18 @@ NASMFormatedCommands::NASMFormatedCommands()
     formatedCommands.insert(WRITE,
                             "\tPRINT_DEC %1, %2\n" \
                             "\tPRINT_CHAR `\\n`\n");
+
     formatedCommands.insert(JNZ,
                             "\tjnz %1\n");
+
+    formatedCommands.insert(JNE,
+                            "\tjne %1\n");
+
+    formatedCommands.insert(JMP,
+                            "\tjmp %1\n");
+    formatedCommands.insert(COND,
+                            "\t%1 %2\n");
+
     formatedCommands.insert(CMP,
                             "\tcmp %1, %2\n");
 }

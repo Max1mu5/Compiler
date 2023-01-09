@@ -31,6 +31,12 @@ LexicalWindow::LexicalWindow(QWidget *parent) :
     _terminals["$"] = -1;
     _terminals["to"] = -1;
     _terminals["loop"] = -1;
+    _terminals["PROGRAM"] = -1;
+    _terminals["VAR"] = -1;
+    _terminals["BEGIN"] = -1;
+    _terminals["END"] = -1;
+    _terminals["begin"] = -1;
+    _terminals["end"] = -1;
 
     _separators[":"] = -1;
     _separators[";"] = -1;

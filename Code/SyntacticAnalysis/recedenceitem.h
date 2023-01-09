@@ -18,16 +18,10 @@ public:
     QString getLeftToStr();
     QString getRightToStr();
 
-
-
 private:
     QString _nameTerm;
     QStringList _left;
     QStringList _right;
-
-
-
-
 };
 
 #endif // RECEDENCEITEM_H

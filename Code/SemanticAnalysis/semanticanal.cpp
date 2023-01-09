@@ -2,6 +2,8 @@
 
 #include <QDebug>
 
+#include <QMessageBox>
+
 
 void SemanticAnal::startSemantic()
 {
@@ -29,6 +31,10 @@ void SemanticAnal::visitor(AstNode *currentNode)
         if(!isTypeMatching(currentNode))
         {
             qDebug() << "Type doesn't match";
+            QMessageBox msgBox;
+            msgBox.critical(0, "Error", "Type doesn't match");
+            msgBox.setFixedSize(500,200);
+            msgBox.exec();
             return;
         }
         break;
@@ -38,6 +44,10 @@ void SemanticAnal::visitor(AstNode *currentNode)
         if(!isDeclared(currentNode))
         {
             qDebug() << "Var doesn't declared";
+            QMessageBox msgBox;
+            msgBox.critical(0,"Error","Var doesn't declared");
+            msgBox.setFixedSize(500,200);
+            msgBox.exec();
             return;
         }
         break;
@@ -48,25 +58,17 @@ void SemanticAnal::visitor(AstNode *currentNode)
         visitor(forOp->body);
         break;
     }
-    case IF_OP:
+    case IF_OP_NODE:
     {
         IfOp* ifOp = dynamic_cast<IfOp*>(currentNode);
         visitor(ifOp->body);
         break;
     }
-    case IF_ELSE_OP:
+    case IF_ELSE_OP_NODE:
     {
         IfElseOp* ifElseOp = dynamic_cast<IfElseOp*>(currentNode);
         visitor(ifElseOp->bodyTrue);
         visitor(ifElseOp->bodyFalse);
-        break;
-    }
-    case IF_ELSEIF_ELSE_NODE:
-    {
-        IfElseifElse* ifElseifElseOp = dynamic_cast<IfElseifElse*>(currentNode);
-        visitor(ifElseifElseOp->firstBodyTrue);
-        visitor(ifElseifElseOp->secondBodyTrue);
-        visitor(ifElseifElseOp->bodyFalse);
         break;
     }
     }
@@ -81,6 +83,11 @@ void SemanticAnal::expVisitor(AstNode *currentNode, QList<AstNode *> &types)
         if(!isDeclared(currentNode))
         {
             qDebug() << "Var doesn't declared";
+            QMessageBox msgBox;
+            msgBox.critical(0,"Error","Var doesn't declared");
+            msgBox.setFixedSize(500,200);
+            msgBox.exec();
+            return;
             break;
         }
 
@@ -122,6 +129,12 @@ bool SemanticAnal::isTypeMatching(AstNode *varAsmnNode)
     if(!isDeclared(var))
     {
         qDebug() << "Var doesn't declared";
+        QMessageBox msgBox;
+        //msgBox.setText("Var doesn't declared");
+        msgBox.critical(0,"Error","Var doesn't declared");
+        msgBox.setFixedSize(500,200);
+        msgBox.exec();
+        return false;
     }
 
     VarType *varType = getVarType(var);
@@ -142,10 +155,7 @@ bool SemanticAnal::isTypeMatching(AstNode *varAsmnNode)
             resultType = "INT";
         }
     }
-    if(resultType == varType->type)
-        return true;
-    else
-        return false;
+    return resultType == varType->type;
 
 }
 

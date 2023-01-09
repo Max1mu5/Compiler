@@ -15,7 +15,7 @@ void CodeGenerating::startCodeGenerating()
 
     _NASMCode.append(_formatedCommands.NASMLanguageStructure[HLT]);
 
-    QFile data("CodeGeneration.txt");
+    QFile data("CodeGeneration.asm");
     if (data.open(QFile::WriteOnly | QFile::Truncate))
     {
         QTextStream out(&data);
@@ -134,6 +134,14 @@ void CodeGenerating::visitor(AstNode *currentNode)
         _NASMCode.append(movNumberEax);
         break;
     }
+    case VAL_FLOAT_NODE:
+    {
+        ValFloat *valFloat = dynamic_cast<ValFloat*>(currentNode);
+        QString movNumberEax = _formatedCommands.formatedCommands[MOV];
+        movNumberEax = movNumberEax.arg("eax", QString::number(valFloat->value));
+        _NASMCode.append(movNumberEax);
+        break;
+    }
     case VAR_NAME_NODE:
     {
         VarName *varName = dynamic_cast<VarName*>(currentNode);
@@ -162,8 +170,25 @@ void CodeGenerating::visitor(AstNode *currentNode)
         generationForOp(currentNode);
         break;
     }
+    case IF_OP_NODE:
+    {
+        generationIfOp(currentNode);
+        break;
+    }
+    case IF_ELSE_OP_NODE:
+    {
+        generationIfElseOp(currentNode);
+        break;
+    }
+    case WHILE_OP_NODE:
+    {
+        generationWhileOp(currentNode);
+        break;
+    }
     }
 }
+
+
 
 QString CodeGenerating::generationOutputOp(AstNode *currentNode)
 {
@@ -258,5 +283,92 @@ QString CodeGenerating::generationForOp(AstNode *currentNode)
     _NASMCode.append(_formatedCommands.formatedCommands[MOV].arg("[" + varName->name + "]", "eax"));
     _NASMCode.append(_formatedCommands.formatedCommands[CMP].arg("ecx", "[" + varName->name + "]"));
     _NASMCode.append(_formatedCommands.formatedCommands[JNZ].arg(marker));
+    return "";
+}
+
+QString CodeGenerating::generationIfOp(AstNode *currentNode)
+{
+    _context.ifCounter++;
+    IfOp *ifOp = dynamic_cast<IfOp*>(currentNode);
+    CondExp *condExp = dynamic_cast<CondExp*>(ifOp->cond);
+
+    visitor(condExp->rightExp);
+    _NASMCode.append(_formatedCommands.formatedCommands[MOV].arg("ebx", "eax"));
+    visitor(condExp->leftExp);
+
+    _NASMCode.append(_formatedCommands.formatedCommands[CMP].arg("eax", "ebx"));
+
+
+    QString markerIfEnd = "\tifEnd%1";
+    markerIfEnd = markerIfEnd.arg(_context.ifCounter);
+
+
+
+    _NASMCode.append(_formatedCommands.formatedCommands[COND]
+                     .arg(_formatedCommands.condOpMapping[condExp->op],
+                          markerIfEnd));
+
+    visitor(ifOp->body);
+
+    _NASMCode.append(markerIfEnd + ":\n");
+
+    return "";
+}
+
+QString CodeGenerating::generationIfElseOp(AstNode *currentNode)
+{
+    _context.ifCounter++;
+    IfElseOp* ifElse = dynamic_cast<IfElseOp*>(currentNode);
+    CondExp *condExp = dynamic_cast<CondExp*>(ifElse->cond);
+
+    visitor(condExp->rightExp);
+    _NASMCode.append(_formatedCommands.formatedCommands[MOV].arg("ebx", "eax"));
+    visitor(condExp->leftExp);
+
+    _NASMCode.append(_formatedCommands.formatedCommands[CMP].arg("eax", "ebx"));
+
+    QString markerIfEnd = "\tifEnd%1";
+    QString markerElseBody = "\telse%1";
+    markerIfEnd = markerIfEnd.arg(_context.ifCounter);
+    markerElseBody = markerElseBody.arg(_context.ifCounter);
+
+    _NASMCode.append(_formatedCommands.formatedCommands[COND]
+                     .arg(_formatedCommands.condInverseOpMapping[condExp->op],
+                          markerElseBody));
+    visitor(ifElse->bodyTrue);
+    _NASMCode.append(_formatedCommands.formatedCommands[JMP].arg(markerIfEnd));
+    _NASMCode.append(markerElseBody + ":\n");
+    visitor(ifElse->bodyFalse);
+    _NASMCode.append(markerIfEnd + ":\n");
+    return "";
+}
+
+QString CodeGenerating::generationWhileOp(AstNode *currentNode)
+{
+    _context.whileCounter++;
+    WhileOp *whileOp = dynamic_cast<WhileOp*>(currentNode);
+
+    CondExp *condExp = dynamic_cast<CondExp*>(whileOp->cond);
+
+    QString markerWhileStart = "\twhileStart%1";
+    QString markerWhileEnd = "\twhileEnd%1";
+    markerWhileStart = markerWhileStart.arg(_context.whileCounter);
+    markerWhileEnd = markerWhileEnd.arg(_context.whileCounter);
+
+    _NASMCode.append(markerWhileStart + ":\n");
+
+    visitor(condExp->rightExp);
+    _NASMCode.append(_formatedCommands.formatedCommands[MOV].arg("ebx", "eax"));
+    visitor(condExp->leftExp);
+
+    _NASMCode.append(_formatedCommands.formatedCommands[CMP].arg("eax", "ebx"));
+
+    _NASMCode.append(_formatedCommands.formatedCommands[COND]
+                     .arg(_formatedCommands.condInverseOpMapping[condExp->op],
+                          markerWhileEnd));
+
+    visitor(whileOp->body);
+    _NASMCode.append(_formatedCommands.formatedCommands[JMP].arg(markerWhileStart));
+    _NASMCode.append(markerWhileEnd + ":\n");
     return "";
 }

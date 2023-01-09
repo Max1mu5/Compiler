@@ -19,7 +19,10 @@ enum NASMCommands
     MATH_OP = 2,
     WRITE = 3,
     JNZ = 4,
-    CMP = 5
+    CMP = 5,
+    JNE = 6,
+    JMP = 7,
+    COND
 };
 
 class NASMFormatedCommands
@@ -31,6 +34,8 @@ public:
     QHash<NASMStructure, QString> NASMLanguageStructure;
     QHash<QString, QString> signMapping;
     QHash<QString, QString> mathOpMapping;
+    QHash<QString, QString> condOpMapping;
+    QHash<QString, QString> condInverseOpMapping;
 };
 
 #endif // NASMFORMATEDCOMMANDS_H

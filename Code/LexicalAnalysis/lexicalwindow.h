@@ -41,6 +41,9 @@ private:
 
     QHash<QString, int> _terminals;
     QHash<QString, int> _separators;
+    QHash<QString, int> _identifiers;
+    QHash<QString, int> _constants;
+
 
     QString tokensToText();
     void lexicalAnalyze();

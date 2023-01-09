@@ -21,9 +21,14 @@ private:
     NASMFormatedCommands _formatedCommands;
     QString generateBSSSection();
     QString generateMathExp(AstNode *currentNode);
+    QString generateCondExp(AstNode *currentNode);
     void visitor(AstNode *currentNode);
     QString generationOutputOp(AstNode *currentNode);
+    QString generationInputOp(AstNode *currentNode);
     QString generationForOp(AstNode *currentNode);
+    QString generationIfOp(AstNode *currentNode);
+    QString generationIfElseOp(AstNode *currentNode);
+    QString generationWhileOp(AstNode *currentNode);
 
 };
 

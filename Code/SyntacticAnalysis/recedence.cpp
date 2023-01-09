@@ -253,7 +253,7 @@ void Recedence::generateRecedence()
         for(int column = 0; column < _terminals.length() + 1; column++)
             _recedenceMat[row].append("");
     }
-
+    //NOLINTBEGIN
     for(int terminalRow = 0; terminalRow < _terminals.length(); terminalRow++)
     {
         for(int row = 0; row < _tokens.length(); row++)
@@ -323,7 +323,7 @@ void Recedence::generateRecedence()
 
 
     }
-
+    //NOLINTEND
 }
 
 QList<QStringList> Recedence::parseLanguage()
